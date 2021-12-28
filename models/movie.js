@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { URL_REG_EXP } = require('../config/config');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -24,14 +25,32 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
+    validate: {
+      validator(url) {
+        return URL_REG_EXP.test(url);
+      },
+      message: 'Введите URL.',
+    },
   },
   trailer: {
     type: String,
     required: true,
+    validate: {
+      validator(url) {
+        return URL_REG_EXP.test(url);
+      },
+      message: 'Введите URL.',
+    },
   },
   thumbnail: {
     type: String,
     required: true,
+    validate: {
+      validator(url) {
+        return URL_REG_EXP.test(url);
+      },
+      message: 'Введите URL.',
+    },
   },
   owner: {
     type: mongoose.ObjectId,

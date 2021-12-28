@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 /**
@@ -14,9 +16,36 @@ const getUsers = (req, res) => {
  */
 const createUser = (req, res) => {
   const { email, password, name } = req.body;
-  User.create({ email, password, name })
-    .then((user) => res.status(201).send(user))
+  if (!email || !password) {
+    return res.status(401).send({ message: 'Переданы некорректные данные.' });
+  }
+  return User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        return res.status(401).send({ message: 'Пользователь с таким email уже существует.' });
+      }
+      return bcrypt.hash(password, 10);
+    })
+    .then((hash) => User.create({ email, password: hash, name }))
+    .then((userData) => res.status(201).send({ data: { id: userData._id, email: userData.email } }))
     .catch((error) => res.status(500).send({ message: `Ошибка: ${error.name}` }));
+};
+
+/**
+ * Обработчик запроса авторизации пользователя.
+ */
+const loginUser = (req, res) => {
+  const { email, password } = req.body;
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        'some-secret-key',
+        { expiresIn: '7d' },
+      );
+      return res.send({ token });
+    })
+    .catch((err) => res.status(401).send({ message: err.message }));
 };
 
 /**
@@ -60,6 +89,7 @@ const updateUserProfile = (req, res) => {
 module.exports = {
   getUsers,
   createUser,
+  loginUser,
   getMyProfile,
   updateUserProfile,
 };
