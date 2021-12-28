@@ -1,41 +1,48 @@
 const Movie = require('../models/movie');
+const NotFoundError = require('../errors/not-found-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
 /**
- * Обработчик запроса получения всех фильмов пользователя.
+ * Обработчик запроса получения всех фильмов, сохраненных пользователем.
  */
-const getMovies = (req, res) => {
+const getSavedMovies = (req, res) => {
   Movie.find({})
     .then((movies) => res.status(200).send(movies))
     .catch((error) => res.status(500).send({ message: `Ошибка: ${error.name}` }));
 };
 
 /**
- * Обработчик запроса создания нового фильма в аккаунте пользователя.
+ * Обработчик запроса добавления фильма в "сохранённые фильмы" пользователя.
  */
-const createMovie = (req, res) => {
+const addMovie = (req, res, next) => {
+  const owner = req.user._id;
   const newMovie = req.body;
-  Movie.create({ ...newMovie })
+  Movie.create({ ...newMovie, owner })
     .then((movie) => res.status(201).send(movie))
-    .catch((error) => res.status(500).send({ message: `Ошибка: ${error.name}` }));
+    .catch(next);
 };
 
 /**
- * Обработчик запроса удаления фильма из аккаунта пользователя.
+ * Обработчик запроса удаления фильма из "сохранённых фильмов" пользователя.
  */
-const deleteMovieById = (req, res) => {
+const removeMovie = (req, res, next) => {
+  const owner = req.user._id;
   const { movieId } = req.params;
   Movie.findById(movieId)
     .then((movie) => {
       if (!movie) {
-        return res.status(404).send({ message: 'Пользователя с таким id не существует.' });
+        throw new NotFoundError('Карточки с таким id не существует.');
+      }
+      if (!movie.owner.equals(owner)) {
+        throw new ForbiddenError('Нельзя удалить чужой фильм.');
       }
       return movie.remove().then(() => res.send({ message: 'Фильм удалён.' }));
     })
-    .catch((error) => res.status(500).send({ message: `Ошибка: ${error.name}` }));
+    .catch(next);
 };
 
 module.exports = {
-  getMovies,
-  createMovie,
-  deleteMovieById,
+  getSavedMovies,
+  addMovie,
+  removeMovie,
 };

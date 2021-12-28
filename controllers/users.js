@@ -1,40 +1,44 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { SALT_ROUNDS } = require('../config/config');
+const NotFoundError = require('../errors/not-found-err');
+const BadRequestError = require('../errors/bad-request-err');
+const ConflictError = require('../errors/conflict-err');
 
 /**
  * Обработчик запроса получения всех пользователей.
  */
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(200).send(users))
-    .catch((error) => res.status(500).send({ message: `Ошибка: ${error.name}` }));
+    .catch(next);
 };
 
 /**
  * Обработчик запроса регистрации нового пользователя.
  */
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { email, password, name } = req.body;
   if (!email || !password) {
-    return res.status(401).send({ message: 'Переданы некорректные данные.' });
+    throw new BadRequestError('Переданы некорректные данные.');
   }
-  return User.findOne({ email })
+  User.findOne({ email })
     .then((user) => {
       if (user) {
-        return res.status(401).send({ message: 'Пользователь с таким email уже существует.' });
+        throw new ConflictError('Пользователь с таким email уже существует.');
       }
-      return bcrypt.hash(password, 10);
+      return bcrypt.hash(password, SALT_ROUNDS);
     })
     .then((hash) => User.create({ email, password: hash, name }))
-    .then((userData) => res.status(201).send({ data: { id: userData._id, email: userData.email } }))
-    .catch((error) => res.status(500).send({ message: `Ошибка: ${error.name}` }));
+    .then((userData) => res.status(201).send({ data: { email, id: userData._id } }))
+    .catch(next);
 };
 
 /**
  * Обработчик запроса авторизации пользователя.
  */
-const loginUser = (req, res) => {
+const loginUser = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
@@ -45,28 +49,28 @@ const loginUser = (req, res) => {
       );
       return res.send({ token });
     })
-    .catch((err) => res.status(401).send({ message: err.message }));
+    .catch(next);
 };
 
 /**
  * Обработчик запроса получения профиля текущего пользователя.
  */
-const getMyProfile = (req, res) => {
+const getMyProfile = (req, res, next) => {
   const id = req.user._id;
   User.findById(id)
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'Пользователя с таким id не существует.' });
+        throw new NotFoundError('Пользователя с таким id не существует.');
       }
       return res.status(200).send(user);
     })
-    .catch((error) => res.status(500).send({ message: `Ошибка: ${error.name}` }));
+    .catch(next);
 };
 
 /**
  * Обработчик запроса редактирования профиля текущего пользователя.
  */
-const updateUserProfile = (req, res) => {
+const updateUserProfile = (req, res, next) => {
   const userId = req.user._id;
   const { name, email } = req.body;
   return User.findByIdAndUpdate(
@@ -79,11 +83,11 @@ const updateUserProfile = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'Пользователя с таким id не существует.' });
+        throw new NotFoundError('Пользователя с таким id не существует.');
       }
       return res.status(200).send(user);
     })
-    .catch((error) => res.status(500).send({ message: `Ошибка: ${error.name}` }));
+    .catch(next);
 };
 
 module.exports = {
