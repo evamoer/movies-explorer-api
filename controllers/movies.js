@@ -1,6 +1,7 @@
 const Movie = require('../models/movie');
 const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-err');
+const ConflictError = require('../errors/conflict-err');
 
 /**
  * Обработчик запроса получения всех фильмов, сохраненных пользователем.
@@ -16,9 +17,15 @@ const getSavedMovies = (req, res) => {
  */
 const addMovie = (req, res, next) => {
   const owner = req.user._id;
-  const newMovie = req.body;
-  Movie.create({ ...newMovie, owner })
-    .then((movie) => res.status(201).send(movie))
+  const { movieId } = req.body;
+  return Movie.findOne({ movieId })
+    .then((movie) => {
+      if (movie) {
+        throw new ConflictError('Этот фильм уже был добавлен к пользователю.');
+      }
+      return Movie.create({ ...req.body, owner });
+    })
+    .then((addedMovie) => res.status(201).send(addedMovie))
     .catch(next);
 };
 
