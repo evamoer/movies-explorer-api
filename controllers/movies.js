@@ -48,6 +48,9 @@ const removeMovie = (req, res, next) => {
     .catch(next);
 };
 
+/**
+ * Экспорт обработчиков.
+ */
 module.exports = {
   getSavedMovies,
   addMovie,

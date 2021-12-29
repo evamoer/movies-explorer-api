@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const { URL_REG_EXP } = require('../config/config');
 
+/**
+ * Модель для фильма.
+ */
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
@@ -71,4 +74,7 @@ const movieSchema = new mongoose.Schema({
   },
 });
 
+/**
+ * Экспорт модели.
+ */
 module.exports = mongoose.model('movie', movieSchema);

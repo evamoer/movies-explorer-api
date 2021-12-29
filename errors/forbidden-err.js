@@ -1,3 +1,6 @@
+/**
+ * Расширенный класс ошибки для выдачи при запрещённом запросе.
+ */
 class ForbiddenError extends Error {
   constructor(message) {
     super(message);
@@ -5,4 +8,7 @@ class ForbiddenError extends Error {
   }
 }
 
+/**
+ * Экспорт ошибки.
+ */
 module.exports = ForbiddenError;

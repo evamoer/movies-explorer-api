@@ -1,6 +1,9 @@
 const { Joi } = require('celebrate');
 const { urlValidation } = require('./url-validation');
 
+/**
+ * Настройки для celebrate валидации тела запроса при регистрации пользователя.
+ */
 const signupCelebrateValidationSettings = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -9,6 +12,9 @@ const signupCelebrateValidationSettings = {
   }),
 };
 
+/**
+ * Настройки для celebrate валидации тела запроса при авторизации пользователя.
+ */
 const signinCelebrateValidationSettings = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -16,6 +22,9 @@ const signinCelebrateValidationSettings = {
   }),
 };
 
+/**
+ * Настройки для celebrate валидации тела запроса при редактировании пользователя.
+ */
 const updateUserCelebrateValidationSettings = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -23,6 +32,10 @@ const updateUserCelebrateValidationSettings = {
   }),
 };
 
+/**
+ * Настройки для celebrate валидации тела запроса
+ * при добавлении фильма в сохранённые фильмы пользователя.
+ */
 const addMovieCelebrateValidationSettings = {
   body: Joi.object().keys({
     country: Joi.string().required(),
@@ -40,10 +53,17 @@ const addMovieCelebrateValidationSettings = {
   }),
 };
 
+/**
+ * Настройки для celebrate валидации тела запроса
+ * при удалении фильма из сохранённых фильмов пользователя.
+ */
 const removeMovieCelebrateValidationSettings = {
   params: Joi.object().keys({ movieId: Joi.string().length(24).hex() }),
 };
 
+/**
+ * Экспорт настроек.
+ */
 module.exports = {
   signupCelebrateValidationSettings,
   signinCelebrateValidationSettings,

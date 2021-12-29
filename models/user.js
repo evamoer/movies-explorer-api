@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
 
+/**
+ * Модель для пользователя.
+ */
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -27,6 +30,10 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+/**
+ * Собственный метод модели пользователя
+ * для определения пользователя по имейлу и паролю.
+ */
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email })
     .select('+password')
@@ -44,4 +51,7 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     });
 };
 
+/**
+ * Экспорт модели.
+ */
 module.exports = mongoose.model('user', userSchema);

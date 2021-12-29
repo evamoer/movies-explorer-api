@@ -4,15 +4,11 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const { celebrate, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const routes = require('./routes/index');
-const { createUser, loginUser } = require('./controllers/users');
-const auth = require('./middlewares/auth');
-const { signupCelebrateValidationSettings, signinCelebrateValidationSettings } = require('./helpers/celebrate-validation-settings');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorsHandler = require('./middlewares/errors-handler');
-const NotFoundError = require('./errors/not-found-err');
-const { DB_URI_DEV } = require('./config/config');
+const { DB_URI_DEV, rateLimitSettings } = require('./config/config');
 
 /**
  * Подключение к базе данных. В режиме 'production' адрес базы данных берётся из process.env.
@@ -30,32 +26,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
-app.use(limiter);
+app.use(rateLimit(rateLimitSettings));
 app.use(requestLogger);
 
 /**
- * Роутинг приложения:
- * без авторизации - роуты регистрации и авторизации пользователя,
- * с авторизацией - все остальные роуты приложения.
- * Проверка авторизации пользователя осуществляется миддлвэром auth.
+ * Роутинг на сервере.
  */
-app.post('/signup', celebrate(signupCelebrateValidationSettings), createUser);
-app.post('/signin', celebrate(signinCelebrateValidationSettings), loginUser);
-app.use(auth);
 app.use(routes);
 
 /**
  * Операции по обработке ошибок сервера:
- * errorLogger, обработка перехода на несуществующий роут, celebrate и локальный обработчик ошибок.
+ * errorLogger, celebrate и обработчик ошибок.
  */
 app.use(errorLogger);
-app.use('/', (req, res) => {
-  throw new NotFoundError('Такая страница отсутствует.');
-});
 app.use(errors());
 app.use(errorsHandler);
 

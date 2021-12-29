@@ -1,3 +1,6 @@
+/**
+ * Расширенный класс ошибки для выдачи при запросе с некорректными данными.
+ */
 class BadRequestError extends Error {
   constructor(message) {
     super(message);
@@ -5,4 +8,7 @@ class BadRequestError extends Error {
   }
 }
 
+/**
+ * Экспорт ошибки.
+ */
 module.exports = BadRequestError;

@@ -92,6 +92,9 @@ const updateUserProfile = (req, res, next) => {
     .catch(next);
 };
 
+/**
+ * Экспорт обработчиков.
+ */
 module.exports = {
   getUsers,
   createUser,

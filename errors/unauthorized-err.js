@@ -1,3 +1,6 @@
+/**
+ * Расширенный класс ошибки для запроса с отсутствующей авторизацией.
+ */
 class UnauthorizedError extends Error {
   constructor(message) {
     super(message);
@@ -5,4 +8,7 @@ class UnauthorizedError extends Error {
   }
 }
 
+/**
+ * Экспорт ошибки.
+ */
 module.exports = UnauthorizedError;

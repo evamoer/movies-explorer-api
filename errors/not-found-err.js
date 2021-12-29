@@ -1,3 +1,6 @@
+/**
+ * Расширенный класс ошибки для запроса, по которому ничего нет.
+ */
 class NotFoundError extends Error {
   constructor(message) {
     super(message);
@@ -5,4 +8,7 @@ class NotFoundError extends Error {
   }
 }
 
+/**
+ * Экспорт ошибки.
+ */
 module.exports = NotFoundError;
