@@ -13,7 +13,7 @@ const { DB_URI_DEV, rateLimitSettings } = require('./config/config');
 /**
  * Подключение к базе данных. В режиме 'production' адрес базы данных берётся из process.env.
  */
-const { NODE_ENV, DB_URI_ENV } = process.env;
+const { NODE_ENV, DB_URI_ENV, PORT } = process.env;
 mongoose.connect(NODE_ENV === 'production' ? DB_URI_ENV : DB_URI_DEV, {
   useNewUrlParser: true,
 });
@@ -43,9 +43,8 @@ app.use(errors());
 app.use(errorsHandler);
 
 /**
- * Подключение сервера к 3000-ому порту.
+ * Подключение сервера к порту.
  */
-const { PORT = 3000 } = process.env;
 app.listen(PORT, () => {
   console.log(`App is listening on port ${PORT}`);
 });
