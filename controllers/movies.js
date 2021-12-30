@@ -7,7 +7,8 @@ const ConflictError = require('../errors/conflict-err');
  * Обработчик запроса получения всех фильмов, сохраненных пользователем.
  */
 const getSavedMovies = (req, res) => {
-  Movie.find({})
+  const owner = req.user._id;
+  Movie.find({ owner })
     .then((movies) => res.status(200).send(movies))
     .catch((error) => res.status(500).send({ message: `Ошибка: ${error.name}` }));
 };
