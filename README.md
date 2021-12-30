@@ -1,2 +1,22 @@
-# movies-explorer-api
-Backend for Y.Praktikum Diploma project
+# Дипломный проект "movies-explorer"
+
+## Домен
+
+- movies-explorer-evamoer.nomoredomains.rocks/api/
+- ip: 51.250.19.23
+
+## Директории
+
+- `/config` — папка с файлами конфигурации
+- `/controllers` — папка с файлами контроллеров пользователя и фильмов
+- `/errors` — папка с файлами отдельных ошибок
+- `/helpers` — папка со вспомогательными файлами для валидации
+- `/middlewares` — папка с миддлвэрами аутентификации, обработки ошибок и логгирования
+- `/models` — папка с файлами описания моделей пользователя и фильма
+- `/routes` — папка с файлами для роутинга приложения
+
+## Запуск проекта
+
+`npm run start` — запускает сервер в режиме production
+
+`npm run dev` — запускает сервер с hot-reload в режиме development
