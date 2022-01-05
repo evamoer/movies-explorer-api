@@ -16,7 +16,7 @@ const JWT_SECRET_DEV = 'some-secret-key';
 /**
  * Конфигурация regex-выражения для определения URL.
  */
-const URL_REG_EXP = /https?:\/\/(www\.)?[\w-]*\.[\w\-._~:\/?#[\]@!$&'()*+,;=]*#?/;
+const URL_REG_EXP = /https?:\/\/(www\.)?[\w-]*\.[\w\-._~:\\/?#[\]@!$&'()*+,;=]*#?/;
 
 /**
  * Конфигурация для rateLimit.

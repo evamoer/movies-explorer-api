@@ -19,8 +19,8 @@ router.post('/signin', celebrate(signinCelebrateValidationSettings), loginUser);
 router.use(auth);
 router.use('/users', usersRouter);
 router.use('/movies', moviesRouter);
-router.use('/', (req, res) => {
-  throw new NotFoundError('Такая страница отсутствует.');
+router.use('/', (req, res, next) => {
+  next(new NotFoundError('Такая страница отсутствует.'));
 });
 
 module.exports = router;
