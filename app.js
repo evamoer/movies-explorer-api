@@ -22,12 +22,12 @@ mongoose.connect(NODE_ENV === 'production' ? DB_URI_ENV : DB_URI_DEV, {
  * Создание сервера. Подключение мидлвэров.
  */
 const app = express();
+app.use(requestLogger);
+app.use(rateLimit(rateLimitSettings));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
-app.use(rateLimit(rateLimitSettings));
-app.use(requestLogger);
 
 /**
  * Роутинг на сервере.
