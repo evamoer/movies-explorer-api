@@ -26,6 +26,25 @@ const rateLimitSettings = {
   max: 100,
 };
 
+const otherMessages = {
+  deleteMovieMessage: 'Фильм удалён.',
+  urlValidationMessage: 'Введите URL.',
+  emailValidationMessage: 'Введите email.',
+};
+
+const errorsMessages = {
+  badRequestErrorMessage: 'Переданы некорректные данные.',
+  userConflictErrorMessage: 'Пользователь с данным email уже зарегистрирован.',
+  movieConflictErrorMessage: 'Данный фильм уже был добавлен к пользователю.',
+  movieForbiddenErrorMessage: 'Нельзя удалить чужой фильм.',
+  pageNotFoundErrorMessage: 'Данной страницы не существует.',
+  userNotFoundErrorMessage: 'Пользователя с данным id не существует.',
+  movieNotFoundErrorMessage: 'Фильма с данным id не существует.',
+  authUnauthorizedErrorMessage: 'Необходимо авторизоваться.',
+  wrongUnauthorizedErrorMessage: 'Неправильные почта или пароль.',
+  defaultErrorMessage: 'Произошла ошибка на сервере.',
+};
+
 /**
  * Экспорт конфигураций.
  */
@@ -35,4 +54,6 @@ module.exports = {
   JWT_SECRET_DEV,
   URL_REG_EXP,
   rateLimitSettings,
+  otherMessages,
+  errorsMessages,
 };

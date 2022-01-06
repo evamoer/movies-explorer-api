@@ -6,6 +6,7 @@ const { signupCelebrateValidationSettings, signinCelebrateValidationSettings } =
 const { createUser, loginUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 const NotFoundError = require('../errors/not-found-err');
+const { errorsMessages } = require('../config/config');
 
 /**
  * Роутинг приложения:
@@ -20,7 +21,7 @@ router.use(auth);
 router.use('/users', usersRouter);
 router.use('/movies', moviesRouter);
 router.use('/', (req, res, next) => {
-  next(new NotFoundError('Такая страница отсутствует.'));
+  next(new NotFoundError(errorsMessages.pageNotFoundErrorMessage));
 });
 
 module.exports = router;

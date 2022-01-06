@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { URL_REG_EXP } = require('../config/config');
+const { URL_REG_EXP, otherMessages } = require('../config/config');
 
 /**
  * Модель для фильма.
@@ -32,7 +32,7 @@ const movieSchema = new mongoose.Schema({
       validator(url) {
         return URL_REG_EXP.test(url);
       },
-      message: 'Введите URL.',
+      message: otherMessages.urlValidationMessage,
     },
   },
   trailer: {
@@ -42,7 +42,7 @@ const movieSchema = new mongoose.Schema({
       validator(url) {
         return URL_REG_EXP.test(url);
       },
-      message: 'Введите URL.',
+      message: otherMessages.urlValidationMessage,
     },
   },
   thumbnail: {
@@ -52,7 +52,7 @@ const movieSchema = new mongoose.Schema({
       validator(url) {
         return URL_REG_EXP.test(url);
       },
-      message: 'Введите URL.',
+      message: otherMessages.urlValidationMessage,
     },
   },
   owner: {
