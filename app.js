@@ -32,7 +32,7 @@ app.use(helmet());
 /**
  * Роутинг на сервере.
  */
-app.use(routes);
+app.use('/api', require('./routes/index'));
 
 /**
  * Операции по обработке ошибок сервера:
