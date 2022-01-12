@@ -5,7 +5,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
-const routes = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorsHandler = require('./middlewares/errors-handler');
 const { DB_URI_DEV, rateLimitSettings } = require('./config/config');
