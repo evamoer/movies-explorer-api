@@ -3,7 +3,7 @@ const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ForbiddenError = require('../errors/forbidden-err');
 const ConflictError = require('../errors/conflict-err');
-const { errorsMessages, approveMessages } = require('../config/config');
+const { errorsMessages, otherMessages } = require('../config/config');
 
 /**
  * Обработчик запроса получения всех фильмов, сохраненных пользователем.
@@ -40,14 +40,12 @@ const removeMovie = (req, res, next) => {
   const owner = req.user._id;
   const { movieId } = req.params;
   Movie.findById(movieId)
+    .orFail(() => new NotFoundError(errorsMessages.movieNotFoundErrorMessage))
     .then((movie) => {
-      if (!movie) {
-        throw new NotFoundError(errorsMessages.movieNotFoundErrorMessage);
-      }
       if (!movie.owner.equals(owner)) {
-        throw new ForbiddenError(errorsMessages.movieForbiddenErrorMessage);
+        next(new ForbiddenError(errorsMessages.movieForbiddenErrorMessage));
       }
-      return movie.remove().then(() => res.send({ message: approveMessages.deleteMovieMessage }));
+      return movie.remove().then(() => res.send({ message: otherMessages.deleteMovieMessage }));
     })
     .catch(next);
 };
