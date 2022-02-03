@@ -42,12 +42,6 @@ const movieSchema = new mongoose.Schema({
   thumbnail: {
     type: String,
     required: true,
-    validate: {
-      validator(url) {
-        return URL_REG_EXP.test(url);
-      },
-      message: otherMessages.urlValidationMessage,
-    },
   },
   owner: {
     type: mongoose.ObjectId,
